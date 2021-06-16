@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+        <title>Simple Context Menu</title>
+        <style>
+            * {margin: 0;padding: 0;box-sizing: border-box;}
+            html {background-color: red;font-size: 62.5%;}
+            body {min-height: 100vh;position: relative;font-size: 1.25em;background-color: #fff;}
+            #cm {width:200px;height:250px;background-color: #fdfdfd;font-size: 1rem;display: none;position:absolute;top: 0;left: 0;border-radius: 1rem;box-shadow:0 0 .5rem #999;overflow: hidden;}
+            #cm ul {list-style: none;width: 100%;height:100%;}
+            #cm li a {display:block;padding:1rem;text-decoration:none;color:#333;font-size: 3rem;transition: 0.4s all ease-in-out;}
+            #cm li a:hover {background-color: #e4dede;color: purple;}
+        </style>
+    </head>
+    <body>
+        <div id="cm">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Options</a></li>
+            </ul>
+        </div>
+        <script>
+            let cm = document.querySelector("#cm"),
+                cmWidth = 200,
+                cmHeight = 250
+            document.addEventListener("contextmenu", e => {
+                e.preventDefault();    
+                // get the browser's window width;
+                let windowXLimit = window.innerWidth,
+                    windowYLimit = window.innerHeight
+                // get where the mouse is clicking;
+                let cX = Math.round(e.clientX),
+                    cY = Math.round(e.clientY)
+                // Safe area for default menu behaviour
+                let sx = windowXLimit - cmWidth,
+                    sy = windowYLimit - cmHeight
+                // Simple logic
+                if(cX > sx) {
+                    cX = cX - cmWidth // we are clicking out of safe area X
+                }
+                if(cY > sy) {
+                    cY = cY - cmHeight // we are clicking out of safe area Y
+                }
+                // Show our menu
+                cm.style.left = cX +"px"
+                cm.style.top = cY +"px"
+                cm.style.display = "block"
+            })
+            // Hide the menu when clicking outside
+            document.addEventListener("click", () => {
+                cm.style.display = "none";
+            })
+            // Stop the clicking event on our menu
+            cm.addEventListener("click", e => {
+                e.stopPropagation()
+            })
+            // Stop the right click event too
+            cm.addEventListener("contextmenu", e => {
+                e.preventDefault()
+                e.stopPropagation()
+            })
+        </script>
+    </body>
+</html>
